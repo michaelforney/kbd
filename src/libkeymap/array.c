@@ -67,7 +67,7 @@ lk_array_exists(struct lk_array *a, ssize_t i)
 		return 0;
 	}
 
-	s = (char *)(a->array + (a->memb * i));
+	s = (char *) a->array + (a->memb * i);
 
 	for (k = 0; k < a->memb; k++) {
 		if (s[k] != 0)
@@ -84,7 +84,7 @@ lk_array_get(struct lk_array *a, ssize_t i)
 		errno = EINVAL;
 		return NULL;
 	}
-	return a->array + (a->memb * i);
+	return (char *) a->array + (a->memb * i);
 }
 
 void *
@@ -114,7 +114,7 @@ array_resize(struct lk_array *a, ssize_t i)
 			return -ENOMEM;
 		}
 
-		memset(tmp + (a->memb * a->total), 0, (size_t) (a->memb * (i + 1 - a->total)));
+		memset((char *) tmp + (a->memb * a->total), 0, (size_t) (a->memb * (i + 1 - a->total)));
 
 		a->array = tmp;
 		a->total = i + 1;
@@ -130,7 +130,7 @@ lk_array_set(struct lk_array *a, ssize_t i, const void *e)
 	if (ret < 0)
 		return ret;
 
-	memcpy(a->array + (a->memb * i), e, (size_t) a->memb);
+	memcpy((char *) a->array + (a->memb * i), e, (size_t) a->memb);
 	a->count++;
 
 	return 0;
@@ -145,7 +145,7 @@ lk_array_unset(struct lk_array *a, ssize_t i)
 	}
 
 	if (lk_array_exists(a, i)) {
-		memset(a->array + (a->memb * i), 0, (size_t) a->memb);
+		memset((char *) a->array + (a->memb * i), 0, (size_t) a->memb);
 		a->count--;
 	}
 
@@ -160,7 +160,7 @@ lk_array_append(struct lk_array *a, const void *e)
 	if (ret < 0)
 		return ret;
 
-	memcpy(a->array + (a->memb * a->count), e, (size_t) a->memb);
+	memcpy((char *) a->array + (a->memb * a->count), e, (size_t) a->memb);
 	a->count++;
 
 	return 0;
